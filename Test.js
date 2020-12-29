@@ -1,59 +1,53 @@
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  Text,
-  View,
-  ListView
-} from 'react-native';
+import React, {Component} from 'react';
+import { FlatList } from "react-native";
+import { Container, Header, Left, Body, Right, Title, Content, List, ListItem, Text } from 'native-base';
 import Realm from 'realm'
 
-
-// 犬の名前をリストで出してみる
-class DogList extends Component {
+Props = {};
+export default class App extends Component {
   constructor(props) {
-    super(props)
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.state = {
-      dataSource: ds.cloneWithRows(this.props.dogs)
-    }
+    super(props);
+    this.state = { realm: null };
   }
-  render() {
-    return (
-      <ListView
-        dataSource={this.state.dataSource}
-        renderRow={(rowData) => <Text>{rowData.name}</Text> }>
-      </ListView>
-    )
-  }
-}
 
-class FirstPage extends Component {
-  // テスト用にここでデータを作るよ
   componentWillMount() {
-    let realm = new Realm({
-      schema: [{ name: 'Dog', properties: { name: 'string' } }]
-    })
-    realm.write(() => {
-      realm.create('Dog', { name: 'My Dog' })
-    })
-    //console.log(realm.path)
-    this.state = ({ realm: realm })
+    Realm.open({
+      schema: [{name: 'Person', properties: {key: 'string', name: 'string'}}]
+    }).then(realm => {
+      realm.write(() => {
+        var current = new Date();
+        realm.create('Person', {key: current.toString(), name: 'kojiruri'});
+      });
+      console.log(realm);
+      this.setState({ realm });
+    });
   }
+
+
   render() {
+    const displayItem = this.state.realm ? this.state.realm.objects('Person') : [] 
+
     return (
-      <View>
-        <DogList dogs={this.state.realm.objects('Dog')}></DogList>
-      </View>
+      <Container>
+        <Header>
+          <Left />
+          <Body>
+            <Title>Realmサンプル</Title>
+          </Body>
+          <Right />
+        </Header>
+        <Content>
+        <FlatList
+          data={displayItem}
+          renderItem={({item}) =>
+            <ListItem>
+              <Text>{item.name}</Text>
+            </ListItem>
+          }
+          keyExtractor={item => item.key}
+        />
+        </Content>
+      </Container>
     );
   }
 }
-
-export default class AwesomeReact extends Component {
-  render() {
-    return(
-      <FirstPage />
-    );
-  }
-}
-
-AppRegistry.registerComponent('AwesomeReact', () => AwesomeReact)
