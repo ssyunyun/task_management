@@ -19,6 +19,8 @@ export default class App extends Component {
         realm.create('Person', {key: current.toString(), name: 'kojiruri'});
       });
       console.log(realm);
+      // default.realmのpath
+      console.log(realm.path);
       this.setState({ realm });
     });
   }
@@ -26,6 +28,7 @@ export default class App extends Component {
 
   render() {
     const displayItem = this.state.realm ? this.state.realm.objects('Person') : [] 
+    
 
     return (
       <Container>
