@@ -9,12 +9,13 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 
 function CalendarScreen({ navigation, route }) {
 
   return (
     <>
-      <Text>CalendarScreen</Text>
+      <Calendar />
     </>
   );
 }
