@@ -89,13 +89,16 @@ class FirstPage extends Component {
   componentWillMount() {
 
     Realm.open({
-      schema: [{name: 'Person', properties: {key: 'string', name: 'string'}}]
+      schema: [{name: 'Person', properties: {key: 'string', name: 'string'}}],
+      schemaVersion: 1
     }).then(realm => {
+      console.log(realm);
+
       realm.write(() => {
         var current = new Date();
         realm.create('Person', {key: current.toString(), name: 'kojiruri'});
       });
-      console.log(realm);
+      
       // default.realmのpath
       console.log(realm.path);
       this.setState({ realm });
