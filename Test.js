@@ -87,16 +87,24 @@ class DogList extends Component {
 class FirstPage extends Component {
   // テスト用にここでデータを作るよ
   componentWillMount() {
-    let realm = new Realm({
-      schema: [{ name: 'Dog', properties: { name: 'string' } }]
-    })
-    realm.write(() => {
-      realm.create('Dog', { name: 'My Dog' })
-    })
-    //console.log(realm.path)
-    this.state = ({ realm: realm })
+
+    Realm.open({
+      schema: [{name: 'Person', properties: {key: 'string', name: 'string'}}]
+    }).then(realm => {
+      realm.write(() => {
+        var current = new Date();
+        realm.create('Person', {key: current.toString(), name: 'kojiruri'});
+      });
+      console.log(realm);
+      // default.realmのpath
+      console.log(realm.path);
+      this.setState({ realm });
+    });
   }
   render() {
+
+    const displayItem = this.state.realm ? this.state.realm.objects('Person') : [] 
+    
     return (
       <View>
         <DogList dogs={this.state.realm.objects('Dog')}></DogList>
