@@ -21,7 +21,7 @@ import SettingScreen from './5_SettingScreen'
 
 const Stack = createStackNavigator();
 
-function App() {
+function Routing() {
   return (
     <NavigationContainer>
       {/* アプリ起動時の画面 */}
@@ -43,4 +43,4 @@ function App() {
   );
 }
 
-export default App;
+export default Routing;
