@@ -12,6 +12,7 @@ import {
 
 import Date from '../Components/Date'
 import home_styles from '../Styles/home_style'
+import nakanishi from '../nakanishi'
 
 function HomeScreen({ navigation, route }) {
 

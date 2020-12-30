@@ -11,38 +11,45 @@ export default class App extends Component {
     this.state = { items: null };
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     const data = {
-      name: "kojikoji",
-      sex: 1
+      name: "kojiruri",
+      sex: 0
     }
 
+    console.log("create処理");
     // insertedData = await DAO.create("Character",data);
     // console.log(insertedData);
+
+    console.log("read処理");
     readItems = await DAO.read("Character");
-    console.log("[Read Item]", readItems);
+    // console.log("[Read Item]", readItems);
     // items = await DAO.delete("Character");
     // console.log(items);
     // console.log(readItems[0]);
-    // console.log(readItems);
-    this.setState({ items: readItems});
+    // console.log("readItems: ",readItems);
+    readItemsMapped = readItems.map( 
+      (item) => {
+        return {
+          id: String(item.id),
+          name: item.name,
+          sex: item.sex
+        
+      }} 
+      //   let tmp = item;
+      //   tmp.id = String(tmp.id);
+      //   return tmp;
+      // }
+    );
+
+    console.log(readItemsMapped);
+
+    this.setState({ items: readItemsMapped});
   }
 
 
 
   render() {
-    let distpItems = this.state.items;
-    console.log(distpItems[0]);
-    // console.log(Object.prototype.toString(this.state.items));
-    // console.log(this.state.items.__proto__);
-    // const displayItem = this.state.items.map( 
-    //   item => {return {
-    //       id: String(item.id),
-    //       name: item.name
-    //   }} 
-    // );
-
-    const displayItem = [];
 
     return (
       <Container>
@@ -55,13 +62,13 @@ export default class App extends Component {
         </Header>
         <Content>
         <FlatList
-          data={displayItem}
+          data={this.state.items}
           renderItem={({item}) =>
             <ListItem>
               <Text>{item.name}</Text>
             </ListItem>
           }
-          // keyExtractor={item => item.id}
+          keyExtractor={item => item.id}
         />
         </Content>
       </Container>

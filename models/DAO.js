@@ -1,21 +1,10 @@
 import { open } from "realm";
+import SchemaList from "./Schemas"
 
 const Realm = require("realm");
 
 
-const CharacterSchema = {
-    name: "Character",
-    primaryKey: "id",
-    properties: {
-        id: "int",
-        name: "string",
-        sex: "int"
-    }
-};
-
-const SchemaList = [CharacterSchema]
-
-export default class DAO 
+class DAO 
 {
     static async clear() {
         let config = Realm.Configuration
@@ -26,7 +15,7 @@ export default class DAO
         const realm = await Realm.open({
             path: "Character.realm",
             schema: SchemaList,
-            schemaVersion: 2
+            schemaVersion: 1
         });
         return realm;
     }
@@ -97,3 +86,6 @@ export default class DAO
         return await this.read(schema, key, value);
     }
 }
+
+
+export default　DAO;
