@@ -35,7 +35,7 @@ function CharacterScreen({ navigation, route }) {
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollView}>
         <Text>CharacterScreen</Text>
-
+        {/*
         <View >
           <View style={task_styles.task_position_view}>
             <View style={{ padding: wp('4%') }}>
@@ -100,6 +100,7 @@ function CharacterScreen({ navigation, route }) {
 
           </View>
         </View>
+        */}
       </ScrollView>
     </>
   );

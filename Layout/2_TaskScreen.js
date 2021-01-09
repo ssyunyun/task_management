@@ -5,19 +5,13 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  Button,
   TouchableOpacity,
   Alert,
   ScrollView,
-  // Modal,
 } from 'react-native';
 
 import {
-  Header,
-  LearnMoreLinks,
   Colors,
-  DebugInstructions,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
 import {
@@ -27,123 +21,236 @@ import {
 
 import task_styles from '../Styles/task_style'
 import Task_modal from '../Components/Task_modal'
+import Task_modal_tmp from '../Components/Task_modal_tmp'
 
-import Modal from "react-native-modal";
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import GridView from 'react-native-draggable-gridview'
 
 
 function TaskScreen({ navigation, route }) {
 
   const [modalVisible, setmodalVisible] = React.useState(false);
+  const [modalName, setmodalName] = React.useState('');
 
-  const changemodal = () => {
+  const setModalVisible_false = () => {
     setmodalVisible(false);
   }
 
+  const setModal = (modalName) => {
+    setmodalVisible(true);
+    setmodalName(modalName);
+  }
+
+  const [data, setData] = React.useState([
+    'こじこじ1号',
+    'こじこじ2号',
+    'こじこじ3号',
+    'こじこじ4号',
+    'こじこじ5号',
+    'こじこじ6号',
+    'こじこじ7号',
+    'こじこじ8号',
+    'こじこじ9号',
+    'こじこじ10号',
+    'こじこじ11号',
+    'こじこじ12号',
+    'こじこじ13号',
+    'こじこじ14号',
+    'こじこじ15号',
+    'こじこじ16号',
+  ])
+
   return (
     <>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}>
+      <SafeAreaView>
+
         <Text>TaskScreen</Text>
 
-        <View >
-          <View style={task_styles.task_position_view}>
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  ジム行く
-              </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  読書
-              </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  アサガオに水やり
-              </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  公園で1時間散歩してからスタバでダークモカチップフラペチーノ飲んで帰る
-              </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  キャド
-              </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  キャド
-              </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  キャド
-              </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ padding: wp('4%') }}>
-              <TouchableOpacity
-                underlayColor="#fff"
-                onPress={() => setmodalVisible(true)}>
-                <Task_modal modalstate={modalVisible} cahngemodal={changemodal}/>
-                <Text style={task_styles.task_view}>
-                  キャド
-              </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+        <Task_modal
+          modalVisible_={modalVisible}
+          setModalVisible_false_={setModalVisible_false}
+          modalName_={modalName}
+        />
+        <View style={styles.taskView}>
+            <GridView
+              data={data}
+              numColumns={3}
+              delayLongPress={100}
+              renderItem={(item) => (
+                <View style={styles.grid_View}>
+                  <Text style={{ textAlign: 'center' }}>{item}</Text>
+                </View>
+              )}
+              onPressCell={(item) => setModal(item)}
+              onReleaseCell={(items) => setData(items)}
+            />
         </View>
-      </ScrollView>
+
+        {/* <View style={styles.taskView}>
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            style={styles.scrollView}>
+
+            <View style={task_styles.task_position_view}>
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('ジム行く')}>
+                  <Text style={task_styles.task_view}>
+                    ジム行く
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    読書
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    アサガオに水やり
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    公園で1時間散歩してからスタバでダークモカチップフラペチーノ飲んで帰る
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ padding: wp('4%') }}>
+                <TouchableOpacity
+                  underlayColor="#fff"
+                  onPress={() => setModal('読書')}>
+                  <Text style={task_styles.task_view}>
+                    キャド
+              </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </View> */}
+      </SafeAreaView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  taskView: {
+    height: hp('70%'),
+  },
+  grid_View:{
+    flex: 1,
+    margin: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'lightblue'
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
   },
@@ -182,4 +289,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TaskScreen;
+export default TaskScreen
