@@ -38,8 +38,9 @@ export default StyleSheet.create({
     height: '100%',
     width: '50%',
     // backgroundColor: 'purple',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    // justifyContent: 'space-around',
+    // alignItems: 'center',
+    // flexDirection: 'column',
   },
   task_button: {
     height: '15%',

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  RefreshControlBase,
 } from 'react-native';
 
 import {
@@ -21,229 +22,257 @@ import {
 
 import task_styles from '../Styles/task_style'
 import Task_modal from '../Components/Task_modal'
-import Task_modal_tmp from '../Components/Task_modal_tmp'
+// import Task_modal from '../Components/Task_modal_tmp'
 
 import GridView from 'react-native-draggable-gridview'
+
+import DAO from "../models/DAO"
+import { useEffect, useState, useMemo, useCallback } from "react";
 
 
 function TaskScreen({ navigation, route }) {
 
-  const [modalVisible, setmodalVisible] = React.useState(false);
-  const [modalName, setmodalName] = React.useState('');
+  /* Initialize State */
+  const [task, setTask] = useState([])
+  const [tableChangeDetection, setTableChangeDetection] = useState(true)
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalType, setModalType] = useState('firstRendering');
+  const [modalDiscription, setModalDiscription] = useState([]);
+  const [modalDiscriptionDoW, setModalDiscriptionDoW] = useState({});
+  /********************/
 
-  const setModalVisible_false = () => {
-    setmodalVisible(false);
+  /* Functions */
+  const setModalVisible_false = (kojikoji) => {
+    if (kojikoji) {
+      setModalVisible(false);
+    }
   }
 
-  const setModal = (modalName) => {
-    setmodalVisible(true);
-    setmodalName(modalName);
+  const setModal = async (modalType_tmp = 'firstRendering', item = null) => {
+
+    if (modalType_tmp === 'update') {
+      setModalType(modalType_tmp)
+      setModalDiscription(item)
+      setModalDiscriptionDoW({
+        Mon: item.doW.Mon,
+        Tue: item.doW.Tue,
+        Wed: item.doW.Wed,
+        Thu: item.doW.Thu,
+        Fri: item.doW.Fri,
+        Sat: item.doW.Sat,
+        Sun: item.doW.Sun
+      })
+    } else if (modalType_tmp === 'create' || modalType_tmp === 'firstRendering') {
+      setModalType(modalType_tmp)
+      setModalDiscription({
+        taskName: '',
+        taskMemo: '',
+      })
+      setModalDiscriptionDoW({
+        Mon: 'cyan',
+        Tue: 'cyan',
+        Wed: 'cyan',
+        Thu: 'cyan',
+        Fri: 'cyan',
+        Sat: 'cyan',
+        Sun: 'cyan',
+      })
+    }
   }
 
-  const [data, setData] = React.useState([
-    'こじこじ1号',
-    'こじこじ2号',
-    'こじこじ3号',
-    'こじこじ4号',
-    'こじこじ5号',
-    'こじこじ6号',
-    'こじこじ7号',
-    'こじこじ8号',
-    'こじこじ9号',
-    'こじこじ10号',
-    'こじこじ11号',
-    'こじこじ12号',
-    'こじこじ13号',
-    'こじこじ14号',
-    'こじこじ15号',
-    'こじこじ16号',
-  ])
+  const changeTable = async () => {
 
-  return (
-    <>
-      <SafeAreaView>
+    if (tableChangeDetection === true) {
+      setTableChangeDetection(false)
+    } else if (tableChangeDetection === false) {
+      setTableChangeDetection(true)
+    }
+  }
 
-        <Text>TaskScreen</Text>
+  const tmp = async (item) => {
 
-        <Task_modal
-          modalVisible_={modalVisible}
-          setModalVisible_false_={setModalVisible_false}
-          modalName_={modalName}
-        />
-        <View style={styles.taskView}>
+    const id = item.map((items) => items.id)
+
+    setTask(item)
+
+    for (let sortableNum_ = 0; sortableNum_ < item.length; sortableNum_++) {
+      await connectTable('update', id[sortableNum_], sortableNum_)
+    }
+  }
+
+  /************/
+
+  /* useMemo Functions */
+  const viewTasks = () => {
+
+    console.log("drag!!!!!!!!");
+
+    if (task.length) {
+
+      return (
+        <>
+          <View style={styles.taskView}>
             <GridView
-              data={data}
+              data={task}
               numColumns={3}
-              delayLongPress={100}
-              renderItem={(item) => (
+              delayLongPress={150}
+              width={wp('100%')}
+              heightSelfMade={wp('25')}
+              renderItem={(item, index) => (
                 <View style={styles.grid_View}>
-                  <Text style={{ textAlign: 'center' }}>{item}</Text>
+                  <Text style={{ textAlign: 'center' }}>{item.taskName}</Text>
                 </View>
               )}
-              onPressCell={(item) => setModal(item)}
-              onReleaseCell={(items) => setData(items)}
+              onPressCell={async (item) => {
+                await setModal('update', item)
+                setModalVisible(true)
+              }
+              }
+              onReleaseCell={item => tmp(item)}
+              keyExtractor={item => item.id}
             />
-        </View>
+          </View>
+        </>
+      )
+    } else if(!task.length){
 
-        {/* <View style={styles.taskView}>
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            style={styles.scrollView}>
+      return (
+        <>
+        <View style={styles.taskView}/>
+        </>
+      )
+    }
+  };
 
-            <View style={task_styles.task_position_view}>
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('ジム行く')}>
-                  <Text style={task_styles.task_view}>
-                    ジム行く
-              </Text>
-                </TouchableOpacity>
-              </View>
+  const viewModals = () => {
 
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    読書
-              </Text>
-                </TouchableOpacity>
-              </View>
+    console.log("viewModals!!!!!!!!");
 
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    アサガオに水やり
-              </Text>
-                </TouchableOpacity>
-              </View>
+    let tmp
 
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    公園で1時間散歩してからスタバでダークモカチップフラペチーノ飲んで帰る
-              </Text>
-                </TouchableOpacity>
-              </View>
+    if (!task.length) {
+      tmp = 0
+    } else if (task.length) {
+      tmp = task.length
+    }
 
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
+    return (
+      <>
+        <Task_modal
+          modalVisible_={modalVisible}
+          modalType_={modalType}
+          taskLength_={tmp}
+          setModalVisible_false_={setModalVisible_false}
+          modalDiscription_={modalDiscription}
+          modalDiscriptionDoW_={modalDiscriptionDoW}
+          changeTable_ = {changeTable}
+        />
+      </>
+    )
+  };
 
 
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
+  /************************/
 
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
+  useMemo(() => setModal(), []);
+  const viewTasksMemo = useMemo(() => viewTasks(), [task]);
+  const viewModalsMemo = useMemo(() => viewModals(), [modalVisible]);
 
-              <View style={{ padding: wp('4%') }}>
-                <TouchableOpacity
-                  underlayColor="#fff"
-                  onPress={() => setModal('読書')}>
-                  <Text style={task_styles.task_view}>
-                    キャド
-              </Text>
-                </TouchableOpacity>
-              </View>
+
+  useEffect(() => {
+    console.log('useEffect')
+    connectTable('read').then(item => {
+      setTask(item)
+    })
+  }, [tableChangeDetection])
+
+  if (task === []) {
+    return (
+      <>
+        <Text>Loading...</Text>
+      </>
+    )
+  }
+  else if (task !== []) {
+
+    return (
+      <>
+        <SafeAreaView>
+
+          <Text>TaskScreen</Text>
+
+          {viewTasksMemo}
+          {/* {viewModalsMemo} */}
+
+          {modalVisible ?
+            <View>
+              {viewModalsMemo}
             </View>
-          </ScrollView>
-        </View> */}
-      </SafeAreaView>
-    </>
-  );
+            : <View />
+          }
+
+          <TouchableOpacity
+            underlayColor="#fff"
+            onPress={async () => {
+              await setModal('create')
+              setModalVisible(true)
+            }}
+            style={{
+              borderWidth: 1,
+              width: '100%',
+              height: '10%',
+              borderRadius: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'lawngreen',
+            }}
+          >
+            <Text>creat</Text>
+          </TouchableOpacity>
+
+        </SafeAreaView>
+      </>
+    )
+  }
+}
+
+const connectTable = async (operation, id, sortableNum_) => {
+
+  if (operation === 'read') {
+
+    readItems = await DAO.read("Task");
+    readItemsSorted = readItems.sorted('sortableNum')
+
+    readItemsMapped = readItemsSorted.map(
+      (item) => {
+        return {
+          id: String(item.id),
+          taskName: item.taskName,
+          taskMemo: item.taskMemo,
+          doW: item.doW,
+          sortableNum: item.sortableNum
+        }
+      }
+    );
+
+    return readItemsMapped
+  }
+  else if (operation === 'create') {
+    // create
+  } else if (operation === 'update') {
+    // update
+    await DAO.update("Task", Number(id), "sortableNum", sortableNum_);
+  } else if (operation === 'delete') {
+    await DAO.delete("Task");
+  }
+
 }
 
 const styles = StyleSheet.create({
   taskView: {
     height: hp('70%'),
   },
-  grid_View:{
+  grid_View: {
     flex: 1,
     margin: 1,
     borderRadius: 5,

@@ -11,6 +11,7 @@ import React, { Component } from 'react';
 /* React Navigation */
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import 'react-native-gesture-handler';
 
 /* Screen */
 import HomeScreen from './1_HomeScreen'
@@ -22,14 +23,15 @@ import SettingScreen from './5_SettingScreen'
 const Stack = createStackNavigator();
 
 function Routing() {
+
   return (
     <NavigationContainer>
       {/* アプリ起動時の画面 */}
       <Stack.Navigator
         initialRouteName="Home"
-        mode="modal"
+        mode="card"
         screenOptions={{
-          headerShown: false, // ヘッダー削除
+          headerShown: false,
         }}
       >
         {/* オプションでタイトル名を変更可能(デフォルトのタイトル名は"name") */}

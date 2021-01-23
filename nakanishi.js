@@ -13,28 +13,22 @@ export default class App extends Component {
 
   async componentWillMount() {
     const data = {
-      name: "kojiruri",
+      name: "kojikoji",
       sex: 0
     }
 
     console.log("create処理");
-    // insertedData = await DAO.create("Character",data);
-    // console.log(insertedData);
+    insertedData = await DAO.create("Character",data);
 
     console.log("read処理");
     readItems = await DAO.read("Character");
-    // console.log("[Read Item]", readItems);
     // items = await DAO.delete("Character");
-    // console.log(items);
-    // console.log(readItems[0]);
-    // console.log("readItems: ",readItems);
     readItemsMapped = readItems.map( 
       (item) => {
         return {
           id: String(item.id),
           name: item.name,
           sex: item.sex
-        
       }} 
       //   let tmp = item;
       //   tmp.id = String(tmp.id);
@@ -46,8 +40,6 @@ export default class App extends Component {
 
     this.setState({ items: readItemsMapped});
   }
-
-
 
   render() {
 

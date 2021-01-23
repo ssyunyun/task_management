@@ -13,6 +13,8 @@ import { Calendar } from 'react-native-calendars';
 
 function CalendarScreen({ navigation, route }) {
 
+  console.log('calendarScreen')
+
   return (
     <>
       <Calendar />

@@ -23,9 +23,9 @@ function Task_modal(props) {
         <Modal
             isVisible={props.modalVisible_}
             animationIn='fadeIn'
-            animationInTiming={50}
+            animationInTiming={1}
             animationOut='fadeOut'
-            animationOutTiming={50}
+            animationOutTiming={1}
             avoidKeyboard={true}
             onBackButtonPress={() => props.setModalVisible_false_()}
         >
@@ -35,101 +35,6 @@ function Task_modal(props) {
                     <Text style={styles.TaskTitle_text}>
                         {props.modalName_}
                     </Text>
-                </View>
-
-                <View style={styles.DoW_View}>
-                    <TouchableOpacity
-                        style={{
-                            borderWidth: 1,
-                            width: '13%',
-                            height: '50%',
-                            borderRadius: 5,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: {buttonCalor},
-                        }}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text style={styles.DoW_text}>
-                            月
-                            </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.DoW_button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text style={styles.DoW_text}>
-                            火
-                            </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.DoW_button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text style={styles.DoW_text}>
-                            水
-                            </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.DoW_button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text style={styles.DoW_text}>
-                            木
-                            </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.DoW_button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text style={styles.DoW_text}>
-                            金
-                            </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.DoW_button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text style={styles.DoW_text}>
-                            土
-                            </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.DoW_button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text style={styles.DoW_text}>
-                            日
-                            </Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.TextInput_View}>
-                    <TextInput style={styles.TextInput}
-                        multiline={true}
-                        placeholder="メモ"
-                        defaultValue='tmp' // DBから取得
-                        onChangeText={text => setmemoValue(text)} // DBの更新(memoValue)
-                    />
-                </View>
-
-                <View style={styles.Button_View}>
-                    <TouchableOpacity
-                        style={styles.Button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text >
-                            取消
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.Button}
-                        underlayColor="#fff"
-                        onPress={() => props.setModalVisible_false_()}>
-                        <Text >
-                            決定
-                        </Text>
-                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>

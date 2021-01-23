@@ -15,7 +15,7 @@ class DAO
         const realm = await Realm.open({
             path: "Character.realm",
             schema: SchemaList,
-            schemaVersion: 1
+            schemaVersion: 5
         });
         return realm;
     }
@@ -31,7 +31,6 @@ class DAO
             const id = allItem.reduce((a,b) => a.id > b.id ? a : b).id;
             data.id = id + 1;
         }
-        
         try {
             realm.write(() => {
                 realm.create(schema, data);
@@ -48,16 +47,15 @@ class DAO
         if (target.length === 1) {
             try {
                 realm.write(() => {
-                    let target = realm.objectForPrimaryKey(schema, id);
-                    target[key] = value;
+                    target[0][key] = value;
                 });
-                return target;
+                return target[0];
             } catch(err) {
                 throw new Error( "Bad update request" );
-            }
+            } 
         } else {
             return {result: false, data: target}
-        }
+        } 
         
     }
 
@@ -68,6 +66,8 @@ class DAO
         if (key != null){
             items = items.filter(item => item[key] === value);
         }
+        // console.log('items : ')
+        // console.log(items)
         return items;
     }
 
@@ -81,8 +81,7 @@ class DAO
             });
         } catch(err) {
             throw new Error( "Bad delete request" );       
-        }
-        
+        }        
         return await this.read(schema, key, value);
     }
 }
