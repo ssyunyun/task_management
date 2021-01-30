@@ -144,7 +144,7 @@ function HomeScreen({navigation, route}) {
                 <Text></Text>
                 <Image
                   style={home_styles.character_size}
-                  source={require('../Images/demo.gif')}
+                  source={require('../Images/nohmi.jpg')}
                 />
               </View>
 
