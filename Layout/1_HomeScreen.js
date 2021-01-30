@@ -9,70 +9,64 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 
-import home_styles from '../Styles/home_style'
-import nakanishi from '../nakanishi'
+import home_styles from '../Styles/home_style';
 
-import DAO from "../models/DAO"
-import { useEffect, useState, useMemo } from "react";
+import DAO from '../models/DAO';
+import {useEffect, useState, useMemo} from 'react';
 
-import GridView from 'react-native-draggable-gridview'
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
+import GridView from 'react-native-draggable-gridview';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-function HomeScreen({ navigation, route }) {
-
-  console.log('Realm_schemaVersion : ')
-  console.log(Realm.schemaVersion(Realm.defaultPath))
-
-  const [task, setTask] = useState([])
+function HomeScreen({navigation, route}) {
+  const [task, setTask] = useState([]);
+  const [readCompleateFlag, setReadCompleateFlag] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentDay, setcurrentDay] = useState({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    date: new Date().getDate(),  
+  });
 
   const getTargetDowTasks = async (items) => {
+    let targetDoW = new Date().getDay(); //今日の曜日がIntで返却される
 
-    let targetDoW = new Date().getDay();//今日の曜日がIntで返却される
-
-    const id = items.map((item) => item.id)
-
-    let targetItems
+    let targetItems;
     switch (targetDoW) {
-      case (0):
-        targetItems = items.filter((item) => item.doW.Sun === "yellow")
-        break
-      case (1):
-        targetItems = items.filter((item) => item.doW.Mon === "yellow")
-        break
-      case (2):
-        targetItems = items.filter((item) => item.doW.Tue === "yellow")
-        break
-      case (3):
-        targetItems = items.filter((item) => item.doW.Wed === "yellow")
-        break
-      case (4):
-        targetItems = items.filter((item) => item.doW.Thu === "yellow")
-        break
-      case (5):
-        targetItems = items.filter((item) => item.doW.Fri === "yellow")
-        break
-      case (6):
-        targetItems = items.filter((item) => item.doW.Sat === "yellow")
-        console.log('[土曜日]: ', targetItems)
-        break
+      case 0:
+        targetItems = items.filter((item) => item.doW.Sun === 'yellow');
+        break;
+      case 1:
+        targetItems = items.filter((item) => item.doW.Mon === 'yellow');
+        break;
+      case 2:
+        targetItems = items.filter((item) => item.doW.Tue === 'yellow');
+        break;
+      case 3:
+        targetItems = items.filter((item) => item.doW.Wed === 'yellow');
+        break;
+      case 4:
+        targetItems = items.filter((item) => item.doW.Thu === 'yellow');
+        break;
+      case 5:
+        targetItems = items.filter((item) => item.doW.Fri === 'yellow');
+        break;
+      case 6:
+        targetItems = items.filter((item) => item.doW.Sat === 'yellow');
+        break;
     }
-    return targetItems
-
-  }
+    return targetItems;
+  };
 
   const viewTasks = () => {
-
     if (task.length) {
-
       return (
         <>
           <View style={styles.taskView}>
@@ -81,157 +75,151 @@ function HomeScreen({ navigation, route }) {
               numColumns={1}
               delayLongPress={150}
               width={wp('50%')}
-              heightSelfMade={wp('20%')}
+              height={hp('15%')}
               renderItem={(item, index) => (
                 <View style={styles.grid_View}>
-                  <Text style={{ textAlign: 'center' }}>{item.taskName}</Text>
+                  <Text style={{textAlign: 'center'}}>{item.taskName}</Text>
                 </View>
               )}
               onPressCell={async (item) => {
                 // await setModal('update', item)
                 // setModalVisible(true)
-                Alert.alert(item.taskName)
-              }
-              }
-              // onReleaseCell={item => tmp(item)}
-              keyExtractor={item => item.id}
+                Alert.alert(item.taskName);
+              }}
+              onReleaseCell={(item) => setTask(item)}
+              keyExtractor={(item) => item.id}
             />
           </View>
         </>
-      )
+      );
     } else if (!task.length) {
-
       return (
         <>
           <View style={styles.taskView} />
         </>
-      )
+      );
     }
   };
 
-
   const tmp = async (items) => {
-    let a = await getTargetDowTasks(items)
-    setTask(a)
-  }
+    let targetItems = await getTargetDowTasks(items);
+    setTask(targetItems);
+    setReadCompleateFlag(true);
+  };
 
   const viewTasksMemo = useMemo(() => viewTasks(), [task]);
 
   useEffect(() => {
-    console.log('useEffect')
-    connectTable('read').then(items => {
-      tmp(items)
-    })
-  }, [])
+    console.log('useEffect');
+    connectTable('read').then((items) => {
+      tmp(items);
+    });
+  }, [currentTime]);
 
-  if (task === []) {
+  if (!readCompleateFlag) {
     return (
       <>
         <Text>Loading...</Text>
       </>
-    )
-  } else if (task !== []) {
-    console.log('#######################')
-    console.log(task)
-
+    );
+  } else if (readCompleateFlag) {
     return (
       <>
         <SafeAreaView>
+          <ImageBackground
+            source={require('../Images/back.jpg')}
+            style={styles.image}>
+            <View style={home_styles.date_view}>
+              {/* 時刻表示 */}
+              <Text style={home_styles.date_text}>{currentDay.year}/{currentDay.month}/{currentDay.date}</Text>
+            </View>
 
-
-
-          <View style={home_styles.date_view}>
-            {/* 時刻表示 */}
-            <Text>aaa</Text>
-          </View>
-
-          <View style={home_styles.task_character_view}>
-            {/* キャラ & 吹き出し 表示*/}
-            <View style={home_styles.character_view}>
-              <View style={home_styles.bubble_size}>
-                {/* 吹き出し */}
+            <View style={home_styles.task_character_view}>
+              {/* キャラ & 吹き出し 表示*/}
+              <View style={home_styles.character_view}>
+                <View style={home_styles.bubble_size}>
+                  {/* 吹き出し */}
+                  <Text>Jun♡</Text>
+                  </View>
+                <Text></Text>
+                <Image
+                  style={home_styles.character_size}
+                  source={require('../Images/demo.gif')}
+                />
               </View>
-              <Image
-                style={home_styles.character_size}
-                source={require('../Images/nohmi.jpg')}
-              />
+
+              {/* タスク表示 */}
+              <View style={home_styles.task_view}>{viewTasksMemo}</View>
             </View>
 
-            {/* タスク表示 */}
-            <View style={home_styles.task_view}>
-              {viewTasksMemo}
+            {/* 画面遷移ボタン */}
+            <View style={home_styles.button_view}>
+              <TouchableOpacity
+                style={home_styles.button}
+                underlayColor="#fff"
+                onPress={() => {
+                  setCurrentTime(new Date());
+                  navigation.navigate('Home');
+                }}>
+                <Image
+                  style={home_styles.button_size}
+                  source={require('../Images/Home.png')}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={home_styles.button}
+                underlayColor="#fff"
+                onPress={() => {
+                  navigation.navigate('Task');
+                }}>
+                <Image
+                  style={home_styles.button_size}
+                  source={require('../Images/Task.png')}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={home_styles.button}
+                underlayColor="#fff"
+                onPress={() => {
+                  navigation.navigate('Calendar');
+                }}>
+                <Image
+                  style={home_styles.button_size}
+                  source={require('../Images/Calendar.png')}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={home_styles.button}
+                underlayColor="#fff"
+                onPress={() => {
+                  navigation.navigate('Character');
+                }}>
+                <Image
+                  style={home_styles.button_size}
+                  source={require('../Images/Character.png')}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={home_styles.button}
+                underlayColor="#fff"
+                onPress={() => {
+                  navigation.navigate('Setting');
+                }}>
+                <Image
+                  style={home_styles.button_size}
+                  source={require('../Images/Setting.png')}
+                />
+              </TouchableOpacity>
             </View>
-          </View>
+            <View style={home_styles.ad}>
+              <Text style={{fontSize: hp('5%')}}>広告</Text>
+            </View>
 
-
-
-          {/* 画面遷移ボタン */}
-          <View style={home_styles.button_view}>
-            <TouchableOpacity
-              style={home_styles.button}
-              underlayColor="#fff"
-              onPress={() => {
-                navigation.navigate('Home');
-              }}
-            >
-              <Image
-                style={home_styles.button_size}
-                source={require('../Images/hitokage.jpg')}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={home_styles.button}
-              underlayColor="#fff"
-              onPress={() => {
-                navigation.navigate('Task');
-              }}
-            >
-              <Image
-                style={home_styles.button_size}
-                source={require('../Images/fushigidane.jpg')}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={home_styles.button}
-              underlayColor="#fff"
-              onPress={() => {
-                navigation.navigate('Calendar');
-              }}
-            >
-              <Image
-                style={home_styles.button_size}
-                source={require('../Images/pikachu.jpg')}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={home_styles.button}
-              underlayColor="#fff"
-              onPress={() => {
-                navigation.navigate('Character');
-              }}
-            >
-              <Image
-                style={home_styles.button_size}
-                source={require('../Images/zenigame.jpg')}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={home_styles.button}
-              underlayColor="#fff"
-              onPress={() => {
-                navigation.navigate('Setting');
-              }}
-            >
-              <Image
-                style={home_styles.button_size}
-                source={require('../Images/myu.jpg')}
-              />
-            </TouchableOpacity>
-          </View>
+          </ImageBackground>
         </SafeAreaView>
       </>
     );
@@ -239,39 +227,42 @@ function HomeScreen({ navigation, route }) {
 }
 
 const connectTable = async (operation, id, sortableNum_) => {
-
   if (operation === 'read') {
-
     readItems = await DAO.read('Task');
     // readItemsSorted = readItems.sorted('sortableNum')
-    readItemsMapped = readItems.map(
-      (item) => {
-        return {
-          id: String(item.id),
-          taskName: item.taskName,
-          taskMemo: item.taskMemo,
-          doW: item.doW,
-          sortableNum: item.sortableNum
-        }
-      }
-    );
+    readItemsMapped = readItems.map((item) => {
+      return {
+        id: String(item.id),
+        taskName: item.taskName,
+        taskMemo: item.taskMemo,
+        doW: item.doW,
+        sortableNum: item.sortableNum,
+      };
+    });
 
-    return readItemsMapped
-  }
-  else if (operation === 'create') {
+    return readItemsMapped;
+  } else if (operation === 'create') {
     // create
   } else if (operation === 'update') {
     // update
-    await DAO.update("Task", Number(id), "sortableNum", sortableNum_);
+    await DAO.update('Task', Number(id), 'sortableNum', sortableNum_);
   } else if (operation === 'delete') {
-    await DAO.delete("Task");
+    await DAO.delete('Task');
   }
-
-}
+};
 
 const styles = StyleSheet.create({
+  container: {
+    height: hp('100%'),
+    height: wp('100%'),
+    flexDirection: 'column',
+  },
+  image: {
+    height: hp('100%'),
+    resizeMode: 'cover',
+  },
   taskView: {
-    height: hp('70%'),
+    height: '100%',
   },
   grid_View: {
     flex: 1,
@@ -279,7 +270,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'lightblue'
+    backgroundColor: 'lightgreen',
   },
   scrollView: {
     backgroundColor: Colors.lighter,
@@ -319,7 +310,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default HomeScreen;
-
-

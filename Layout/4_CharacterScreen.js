@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  
 } from 'react-native';
 
 import {
@@ -105,6 +106,7 @@ function CharacterScreen({ navigation, route }) {
     </>
   );
 }
+
 
 const styles = StyleSheet.create({
   scrollView: {

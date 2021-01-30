@@ -11,18 +11,22 @@ export default StyleSheet.create({
     // backgroundColor: 'yellow',
   },
   date_text: {
-    fontSize: hp('3%'),
+    fontSize: hp('5%'),
   },
   task_character_view: {
-    height: hp('70%'),
+    height: hp('75%'),
     justifyContent: 'center',
     // backgroundColor: 'red',
     flexDirection: 'row',
   },
   bubble_size: {
     height: '20%',
-    width: '90%',
-    borderWidth: 1,
+    width: '95%',
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderRadius: 30,
+    borderWidth: 2,
+    padding: 10
   },
   character_view: {
     height: '100%',
@@ -33,6 +37,7 @@ export default StyleSheet.create({
   character_size: {
     height: '80%',
     width: '100%',
+    resizeMode: 'contain'
   },
   task_view: {
     height: '100%',
@@ -50,22 +55,24 @@ export default StyleSheet.create({
     borderWidth: 1,
   },
   button_view: {
-    height: hp('18%'),
+    height: hp('10%'),
     // backgroundColor: 'blue',
     flexDirection: 'row',
-    paddingTop: 40,
-    paddingBottom: 40,
+    // paddingTop: 10,
+    // paddingBottom: 40,
     flexWrap: 'nowrap',
   },
   button: {
     //枠を作りたい
-    height: hp('10%'),
-    width: wp('20%'),
+    height: '100%',
+    width: '20%',
     justifyContent: 'center',
-    // backgroundColor: 'red',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderColor: 'black',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#fff',
+    // padding: 8,
   },
   button_char: {
     //文字を調整
@@ -74,8 +81,9 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   button_size: {
-    height: wp('20%'),
-    width: wp('20%'),
+    height: '90%',
+    width: '90%',
+    resizeMode: 'contain'
   },
   tasks: {},
   myText: {
@@ -97,5 +105,16 @@ export default StyleSheet.create({
     textAlign: 'center',
     paddingLeft: 10,
     paddingRight: 10,
+  },
+  ad: {
+
+    height: hp('10%'),
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'gray',
+    borderColor: 'black',
+    borderWidth: 1,
+    // padding: 8,
   },
 });

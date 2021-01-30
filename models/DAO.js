@@ -15,7 +15,7 @@ class DAO
         const realm = await Realm.open({
             path: "Character.realm",
             schema: SchemaList,
-            schemaVersion: 5
+            schemaVersion: 6
         });
         return realm;
     }
