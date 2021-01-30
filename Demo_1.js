@@ -10,11 +10,13 @@ import {
   Alert,
   FlatList,
   ImageBackground,
+  StatusBar
 } from 'react-native';
 
 function Demo_1() {
   return (
     <>
+    <StatusBar backgroundColor="blue" hidden={true}/>
       <View style={styles.container}>
         <ImageBackground
           source={require('./Images/kamome.png')}

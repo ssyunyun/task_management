@@ -10,6 +10,7 @@ import {
   Alert,
   FlatList,
   ImageBackground,
+  StatusBar,
 } from 'react-native';
 
 import home_styles from '../Styles/home_style';
@@ -32,7 +33,7 @@ function HomeScreen({navigation, route}) {
   const [currentDay, setcurrentDay] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
-    date: new Date().getDate(),  
+    date: new Date().getDate(),
   });
 
   const getTargetDowTasks = async (items) => {
@@ -125,13 +126,17 @@ function HomeScreen({navigation, route}) {
   } else if (readCompleateFlag) {
     return (
       <>
-        <SafeAreaView>
+        <SafeAreaView style={styles.topSafeArea} />
+        <SafeAreaView style={styles.bottomSafeArea}>
+          <StatusBar backgroundColor="blue" barStyle="light-content" hidden={false} />
           <ImageBackground
             source={require('../Images/back.jpg')}
             style={styles.image}>
             <View style={home_styles.date_view}>
               {/* 時刻表示 */}
-              <Text style={home_styles.date_text}>{currentDay.year}/{currentDay.month}/{currentDay.date}</Text>
+              <Text style={home_styles.date_text}>
+                {currentDay.year}/{currentDay.month}/{currentDay.date}
+              </Text>
             </View>
 
             <View style={home_styles.task_character_view}>
@@ -140,11 +145,11 @@ function HomeScreen({navigation, route}) {
                 <View style={home_styles.bubble_size}>
                   {/* 吹き出し */}
                   <Text>Jun♡</Text>
-                  </View>
+                </View>
                 <Text></Text>
                 <Image
                   style={home_styles.character_size}
-                  source={require('../Images/demo.gif')}
+                  source={require('../Images/nohmi.jpg')}
                 />
               </View>
 
@@ -218,7 +223,6 @@ function HomeScreen({navigation, route}) {
             <View style={home_styles.ad}>
               <Text style={{fontSize: hp('5%')}}>広告</Text>
             </View>
-
           </ImageBackground>
         </SafeAreaView>
       </>
@@ -252,6 +256,14 @@ const connectTable = async (operation, id, sortableNum_) => {
 };
 
 const styles = StyleSheet.create({
+  topSafeArea: {
+    flex: 0,
+    backgroundColor: 'blue',
+  },
+  bottomSafeArea: {
+    flex: 1,
+    backgroundColor: 'green',
+  },
   container: {
     height: hp('100%'),
     height: wp('100%'),
