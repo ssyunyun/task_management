@@ -145,7 +145,7 @@ function HomeScreen({navigation, route}) {
           barStyle="light-content"
           hidden={false}
         />
-        <SafeAreaView style={styles.bottomSafeArea}>
+        <View style={styles.bottomSafeArea}>
           <ImageBackground
             source={require('../Images/back_1.jpg')}
             style={styles.image}>
@@ -240,7 +240,7 @@ function HomeScreen({navigation, route}) {
               <Text style={{fontSize: hp('5%')}}>広告</Text>
             </View>
           </ImageBackground>
-        </SafeAreaView>
+        </View>
       </>
     );
   }
