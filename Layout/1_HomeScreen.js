@@ -26,8 +26,11 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import LottieView from 'lottie-react-native';
+
 function HomeScreen({navigation, route}) {
   const [task, setTask] = useState([]);
+  const [taskCheck, setTaskCheck] = useState(false);
   const [readCompleateFlag, setReadCompleateFlag] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentDay, setcurrentDay] = useState({
@@ -79,13 +82,23 @@ function HomeScreen({navigation, route}) {
               height={hp('15%')}
               renderItem={(item, index) => (
                 <View style={styles.grid_View}>
+                  {taskCheck ? (
+                    <LottieView
+                      source={require('../Animation/46345-green.json')}
+                      autoPlay
+                      loop={false}
+                    />
+                  ) : (
+                    <View />
+                  )}
                   <Text style={{textAlign: 'center'}}>{item.taskName}</Text>
                 </View>
               )}
               onPressCell={async (item) => {
                 // await setModal('update', item)
                 // setModalVisible(true)
-                Alert.alert(item.taskName);
+                setTaskCheck(true);
+                // Alert.alert(item.taskName);
               }}
               onReleaseCell={(item) => setTask(item)}
               keyExtractor={(item) => item.id}
@@ -108,7 +121,7 @@ function HomeScreen({navigation, route}) {
     setReadCompleateFlag(true);
   };
 
-  const viewTasksMemo = useMemo(() => viewTasks(), [task]);
+  const viewTasksMemo = useMemo(() => viewTasks(), [task, taskCheck]);
 
   useEffect(() => {
     console.log('useEffect');
@@ -127,10 +140,14 @@ function HomeScreen({navigation, route}) {
     return (
       <>
         <SafeAreaView style={styles.topSafeArea} />
+        <StatusBar
+          backgroundColor="blue"
+          barStyle="light-content"
+          hidden={false}
+        />
         <SafeAreaView style={styles.bottomSafeArea}>
-          <StatusBar backgroundColor="blue" barStyle="light-content" hidden={false} />
           <ImageBackground
-            source={require('../Images/back.jpg')}
+            source={require('../Images/back_1.jpg')}
             style={styles.image}>
             <View style={home_styles.date_view}>
               {/* 時刻表示 */}
@@ -146,10 +163,9 @@ function HomeScreen({navigation, route}) {
                   {/* 吹き出し */}
                   <Text>Jun♡</Text>
                 </View>
-                <Text></Text>
                 <Image
                   style={home_styles.character_size}
-                  source={require('../Images/nohmi.jpg')}
+                  source={require('../Images/person.png')}
                 />
               </View>
 
@@ -264,13 +280,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'green',
   },
-  container: {
-    height: hp('100%'),
-    height: wp('100%'),
-    flexDirection: 'column',
-  },
   image: {
-    height: hp('100%'),
+    height: '100%',
     resizeMode: 'cover',
   },
   taskView: {
@@ -282,7 +293,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'lightgreen',
+    backgroundColor: 'lightblue',
   },
   scrollView: {
     backgroundColor: Colors.lighter,

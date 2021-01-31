@@ -177,13 +177,13 @@ function TaskScreen({navigation, route}) {
       setReadCompleateFlag(true);
     });
 
-    // const demo = () => {
-    //   console.log('AAAAAAAAAAAAAAAAAAA');
-    //   navigation.goBack();
-    //   return true;
-    // };
+    const demo = () => {
+      console.log('AAAAAAAAAAAAAAAAAAA');
+      navigation.goBack();
+      return true;
+    };
 
-    // BackHandler.addEventListener('hardwareBackPress', demo);
+    BackHandler.addEventListener('hardwareBackPress', demo);
 
   }, [tableChangeDetection]);
 

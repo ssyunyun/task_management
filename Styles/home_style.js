@@ -6,7 +6,7 @@ import {
 
 export default StyleSheet.create({
   date_view: {
-    height: hp('5%'),
+    height: '5%',
     justifyContent: 'center',
     // backgroundColor: 'yellow',
   },
@@ -14,7 +14,7 @@ export default StyleSheet.create({
     fontSize: hp('5%'),
   },
   task_character_view: {
-    height: hp('75%'),
+    height: '75%',
     justifyContent: 'center',
     // backgroundColor: 'red',
     flexDirection: 'row',
@@ -32,6 +32,7 @@ export default StyleSheet.create({
     height: '100%',
     width: '50%',
     alignItems: 'center',
+    // justifyContent: 'center',
     // backgroundColor: 'green',
   },
   character_size: {
@@ -55,7 +56,7 @@ export default StyleSheet.create({
     borderWidth: 1,
   },
   button_view: {
-    height: hp('10%'),
+    height: '10%',
     // backgroundColor: 'blue',
     flexDirection: 'row',
     // paddingTop: 10,
@@ -108,7 +109,7 @@ export default StyleSheet.create({
   },
   ad: {
 
-    height: hp('10%'),
+    height: '10%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
