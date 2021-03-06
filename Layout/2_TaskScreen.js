@@ -4,11 +4,7 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  Image,
   TouchableOpacity,
-  Alert,
-  ScrollView,
-  RefreshControlBase,
   BackHandler,
   ImageBackground
 } from 'react-native';

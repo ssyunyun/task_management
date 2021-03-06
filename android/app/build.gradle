@@ -156,6 +156,20 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
+            minifyEnabled true
+
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            shrinkResources true
+
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -226,6 +240,7 @@ dependencies {
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
     /*************/
 
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
 }
 
 // Run this once to be able to run the application with BUCK

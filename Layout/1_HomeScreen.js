@@ -5,10 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  Button,
   TouchableOpacity,
-  Alert,
-  FlatList,
   ImageBackground,
   StatusBar,
 } from 'react-native';
@@ -27,17 +24,16 @@ import {
 } from 'react-native-responsive-screen';
 
 import LottieView from 'lottie-react-native';
+import {AdMobBanner} from 'react-native-admob';
+import Swiper from 'react-native-swiper';
 
 function HomeScreen({navigation, route}) {
   const [task, setTask] = useState([]);
   const [taskCheck, setTaskCheck] = useState(false);
   const [readCompleateFlag, setReadCompleateFlag] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [currentDay, setcurrentDay] = useState({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    date: new Date().getDate(),
-  });
+  const [selectedDay, setSelectedDay] = useState(new Date());
+  const [preDayIndex, setPreDayIndex] = useState(6);
 
   const getTargetDowTasks = async (items) => {
     let targetDoW = new Date().getDay(); //今日の曜日がIntで返却される
@@ -100,7 +96,10 @@ function HomeScreen({navigation, route}) {
                 setTaskCheck(true);
                 // Alert.alert(item.taskName);
               }}
-              onReleaseCell={(item) => setTask(item)}
+              onReleaseCell={(item) => {
+                setTask(item);
+                console.log('###########');
+              }}
               keyExtractor={(item) => item.id}
             />
           </View>
@@ -115,6 +114,82 @@ function HomeScreen({navigation, route}) {
     }
   };
 
+  const viewDays = () => {
+    return (
+      <>
+        <View>
+          <Swiper
+            showsButtons={true}
+            loop={false}
+            showsPagination={false}
+            index={6}
+            buttonWrapperStyle={{
+              backgroundColor: 'transparent',
+              flexDirection: 'row',
+              position: 'absolute',
+              top: -hp('0.6%'),
+              left: 0,
+              flex: 1,
+              paddingHorizontal: 10,
+              paddingVertical: 10,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+            onIndexChanged={(index) => {
+              console.log(index);
+              console.log(preDayIndex);
+              setTaskCheck(true);
+              if (index > preDayIndex) {
+                // tmpDay.setDate(tmpDay.getDate() + 1);
+                // setSelectedDay(tmpDay);
+                // setPreDayIndex(index);
+              } else if (index < preDayIndex) {
+                // tmpDay.setDate(tmpDay.getDate() - 1);
+                // setSelectedDay(tmpDay);
+                // setPreDayIndex(index);
+              }
+            }}>
+            <View style={styles.date_swipe_view}>
+              <Text style={styles.date_swipe_text_view}>
+                {selectedDay.getDate()}
+              </Text>
+            </View>
+            <View style={styles.date_swipe_view}>
+              <Text style={styles.date_swipe_text_view}>
+                {selectedDay.getDate()}
+              </Text>
+            </View>
+            <View style={styles.date_swipe_view}>
+              <Text style={styles.date_swipe_text_view}>
+                {selectedDay.getDate()}
+              </Text>
+            </View>
+            <View style={styles.date_swipe_view}>
+              <Text style={styles.date_swipe_text_view}>
+                {selectedDay.getDate()}
+              </Text>
+            </View>
+            <View style={styles.date_swipe_view}>
+              <Text style={styles.date_swipe_text_view}>
+                {selectedDay.getDate()}
+              </Text>
+            </View>
+            <View style={styles.date_swipe_view}>
+              <Text style={styles.date_swipe_text_view}>
+                {selectedDay.getDate()}
+              </Text>
+            </View>
+            <View style={styles.date_swipe_view}>
+              <Text style={styles.date_swipe_text_view}>
+                {selectedDay.getDate()}
+              </Text>
+            </View>
+          </Swiper>
+        </View>
+      </>
+    );
+  };
+
   const tmp = async (items) => {
     let targetItems = await getTargetDowTasks(items);
     setTask(targetItems);
@@ -122,6 +197,7 @@ function HomeScreen({navigation, route}) {
   };
 
   const viewTasksMemo = useMemo(() => viewTasks(), [task, taskCheck]);
+  const viewDaysMemo = useMemo(() => viewDays(), [selectedDay]);
 
   useEffect(() => {
     console.log('useEffect');
@@ -149,12 +225,7 @@ function HomeScreen({navigation, route}) {
           <ImageBackground
             source={require('../Images/back_1.jpg')}
             style={styles.image}>
-            <View style={home_styles.date_view}>
-              {/* 時刻表示 */}
-              <Text style={home_styles.date_text}>
-                {currentDay.year}/{currentDay.month}/{currentDay.date}
-              </Text>
-            </View>
+            <View style={home_styles.date_view}>{viewDaysMemo}</View>
 
             <View style={home_styles.task_character_view}>
               {/* キャラ & 吹き出し 表示*/}
@@ -174,70 +245,78 @@ function HomeScreen({navigation, route}) {
             </View>
 
             {/* 画面遷移ボタン */}
-            <View style={home_styles.button_view}>
-              <TouchableOpacity
-                style={home_styles.button}
-                underlayColor="#fff"
-                onPress={() => {
-                  setCurrentTime(new Date());
-                  navigation.navigate('Home');
-                }}>
-                <Image
-                  style={home_styles.button_size}
-                  source={require('../Images/Home.png')}
-                />
-              </TouchableOpacity>
+            <View style={home_styles.button_ad_view}>
+              <View style={home_styles.button_view}>
+                <TouchableOpacity
+                  style={home_styles.button}
+                  underlayColor="#fff"
+                  onPress={() => {
+                    setCurrentTime(new Date());
+                    navigation.navigate('Home');
+                  }}>
+                  <Image
+                    style={home_styles.button_size}
+                    source={require('../Images/Home.png')}
+                  />
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={home_styles.button}
-                underlayColor="#fff"
-                onPress={() => {
-                  navigation.navigate('Task');
-                }}>
-                <Image
-                  style={home_styles.button_size}
-                  source={require('../Images/Task.png')}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={home_styles.button}
+                  underlayColor="#fff"
+                  onPress={() => {
+                    navigation.navigate('Task');
+                  }}>
+                  <Image
+                    style={home_styles.button_size}
+                    source={require('../Images/Task.png')}
+                  />
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={home_styles.button}
-                underlayColor="#fff"
-                onPress={() => {
-                  navigation.navigate('Calendar');
-                }}>
-                <Image
-                  style={home_styles.button_size}
-                  source={require('../Images/Calendar.png')}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={home_styles.button}
+                  underlayColor="#fff"
+                  onPress={() => {
+                    navigation.navigate('Calendar');
+                  }}>
+                  <Image
+                    style={home_styles.button_size}
+                    source={require('../Images/Calendar.png')}
+                  />
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={home_styles.button}
-                underlayColor="#fff"
-                onPress={() => {
-                  navigation.navigate('Character');
-                }}>
-                <Image
-                  style={home_styles.button_size}
-                  source={require('../Images/Character.png')}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={home_styles.button}
+                  underlayColor="#fff"
+                  onPress={() => {
+                    navigation.navigate('Character');
+                  }}>
+                  <Image
+                    style={home_styles.button_size}
+                    source={require('../Images/Character.png')}
+                  />
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={home_styles.button}
-                underlayColor="#fff"
-                onPress={() => {
-                  navigation.navigate('Setting');
-                }}>
-                <Image
-                  style={home_styles.button_size}
-                  source={require('../Images/Setting.png')}
+                <TouchableOpacity
+                  style={home_styles.button}
+                  underlayColor="#fff"
+                  onPress={() => {
+                    navigation.navigate('Setting');
+                  }}>
+                  <Image
+                    style={home_styles.button_size}
+                    source={require('../Images/Setting.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={home_styles.ad}>
+                <AdMobBanner
+                  adSize="smartBannerLandscape"
+                  adUnitID="ca-app-pub-8336553396881092/6199280917" // ProductionAd
+                  // adUnitID="ca-app-pub-3940256099942544/6300978111" //TestAd
+                  testDevices={[AdMobBanner.simulatorId]}
+                  onAdFailedToLoad={(error) => console.error(error)}
                 />
-              </TouchableOpacity>
-            </View>
-            <View style={home_styles.ad}>
-              <Text style={{fontSize: hp('5%')}}>広告</Text>
+              </View>
             </View>
           </ImageBackground>
         </View>
@@ -330,6 +409,16 @@ const styles = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: 'right',
+  },
+  date_swipe_view: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  date_swipe_text_view: {
+    color: '#fff',
+    fontSize: hp('4%'),
+    fontWeight: 'bold',
+    justifyContent: 'center',
   },
 });
 

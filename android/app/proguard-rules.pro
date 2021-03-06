@@ -8,3 +8,9 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+-printconfiguration /tmp/full-r8-config.txt
+-printusage /tmp/usage.txt
+-keep public class io.realm.react.util.SSLHelper
+-keep class com.facebook.** {
+   *;
+}

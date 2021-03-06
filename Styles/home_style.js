@@ -7,7 +7,7 @@ import {
 export default StyleSheet.create({
   date_view: {
     height: '5%',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     // backgroundColor: 'yellow',
   },
   date_text: {
@@ -55,8 +55,13 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
   },
+  button_ad_view:{
+    height: '20%',
+    justifyContent: 'flex-end',
+  },
   button_view: {
-    height: '10%',
+    height: '45%',
+    // alignSelf: 'flex-start',
     // backgroundColor: 'blue',
     flexDirection: 'row',
     // paddingTop: 10,
@@ -65,7 +70,7 @@ export default StyleSheet.create({
   },
   button: {
     //枠を作りたい
-    height: '100%',
+    // height: wp('20%'),
     width: '20%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -108,14 +113,12 @@ export default StyleSheet.create({
     paddingRight: 10,
   },
   ad: {
-
-    height: '10%',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'gray',
-    borderColor: 'black',
-    borderWidth: 1,
+    // height: '50%',
+    // alignItems: 'center',
+    // width: '100%',
+    backgroundColor: 'white',
+    // borderColor: 'black',
+    // borderWidth: 1,
     // padding: 8,
   },
 });
